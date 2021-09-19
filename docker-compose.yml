@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+
+    # PHP service
+    app:
+        build: .
+        working_dir: /var/www/LinkReducer/src
+        volumes:
+            - ./src/:/var/www/LinkReducer/src
+            - ./vendor/:/var/www/LinkReducer/vendor
+            - ./tests/:/var/www/LinkReducer/tests
+            - ./.env/:/var/www/LinkReducer/.env
+            - ./composer.json/:/var/www/LinkReducer/composer.json
+            - ./composer.lock/:/var/www/LinkReducer/composer.lock
+        networks:
+            - app-network
+
+    # MySQL database service
+    db:
+        image: mysql:5.7
+        command: --character-set-server=utf8 --collation-server=utf8_general_ci
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        env_file:
+            - ./.env
+        networks:
+            - app-network
+
+    # Nginx service
+    nginx:
+        image: nginx:alpine
+        ports:
+            - 8000:80
+        volumes:
+            - ./src/:/var/www/LinkReducer/src
+            - ./vendor/:/var/www/LinkReducer/vendor
+            - ./.env/:/var/www/LinkReducer/.env
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            - app-network
+
+    redis:
+        image: redis
+        volumes:
+            - ./redis/:/var/lib/redis
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge

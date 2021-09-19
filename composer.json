@@ -1,0 +1,23 @@
+{
+    "name": "warma2d/link-reducer",
+    "authors": [
+        {
+            "name": "warma2d",
+            "email": "warma2d@ya.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "m1/env": "^2.2",
+        "bramus/router": "~1.6",
+        "predis/predis": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+    "autoload": {
+        "psr-4": {
+            "LinkReducer\\": "src/"
+        }
+    }
+}
